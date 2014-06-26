@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/song_info">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/song_info_title"
+        android:id="@+id/textViewSongTitle"
+        android:padding="20dp"
+        android:gravity="center_horizontal" />
+
+    <TableLayout
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_marginBottom="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:layout_marginRight="50dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/song_info_field_artist"
+                android:id="@+id/textViewFieldArtist" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/info_no_value"
+                android:id="@+id/textViewValuedArtist" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginBottom="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/song_info_field_album"
+                android:id="@+id/textViewFieldAlbum" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/info_no_value"
+                android:id="@+id/textViewValuedAlbum" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginBottom="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/song_info_field_favoris"
+                android:id="@+id/textViewFavoris" />
+            <RadioGroup
+                android:orientation="horizontal">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/song_info_field_oui"
+                    android:id="@+id/radioButtonFavOui" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/song_info_field_non"
+                    android:checked="true"
+                    android:id="@+id/radioButtonFavNon" />
+            </RadioGroup>
+        </TableRow>
+
+
+    </TableLayout>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:id="@+id/imageViewAlbum"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:contentDescription="@string/song_info_cover_album" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/song_info_button"
+            android:id="@+id/buttonListen" />
+
+        <Button
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/song_info_buttonDeezer"
+            android:id="@+id/buttonDeezer" />
+    </LinearLayout>
+
+
+</LinearLayout>

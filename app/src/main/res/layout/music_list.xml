@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/imgListAlbum"
+        android:contentDescription="@string/main_ico_album"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"/>
+    <TextView
+        android:id="@+id/txtListAlbum"
+        android:gravity="center"
+        android:layout_width="0sp"
+        android:layout_height="100dp"
+        android:layout_weight="3"
+        android:text="@string/main_search_result"
+        android:textSize="18sp"/>
+    <ImageView
+        android:id="@+id/imgFavListAlbum"
+        android:contentDescription="@string/main_ico_fav"
+        android:src="@android:drawable/btn_star_big_off"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"/>
+</LinearLayout>
