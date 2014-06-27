@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/back_drawable"
     android:id="@+id/song_info">
 
     <TextView
@@ -10,6 +11,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/song_info_title"
+        android:textColor="@android:color/white"
         android:id="@+id/textViewSongTitle"
         android:padding="20dp"
         android:gravity="center_horizontal" />
@@ -28,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/song_info_field_artist"
+                android:textColor="@android:color/holo_blue_light"
                 android:id="@+id/textViewFieldArtist" />
 
             <TextView
@@ -35,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/info_no_value"
+                android:textColor="@android:color/white"
                 android:id="@+id/textViewValuedArtist" />
         </TableRow>
 
@@ -48,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/song_info_field_album"
+                android:textColor="@android:color/holo_blue_light"
                 android:id="@+id/textViewFieldAlbum" />
 
             <TextView
@@ -55,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/info_no_value"
+                android:textColor="@android:color/white"
                 android:id="@+id/textViewValuedAlbum" />
         </TableRow>
 
@@ -67,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/song_info_field_favoris"
+                android:textColor="@android:color/holo_blue_light"
                 android:id="@+id/textViewFavoris" />
             <RadioGroup
                 android:orientation="horizontal">
@@ -74,13 +81,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/song_info_field_oui"
+                    android:textColor="@android:color/white"
+                    android:saveEnabled="false"
                     android:id="@+id/radioButtonFavOui" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/song_info_field_non"
+                    android:textColor="@android:color/white"
                     android:checked="true"
+                    android:saveEnabled="false"
                     android:id="@+id/radioButtonFavNon" />
             </RadioGroup>
         </TableRow>
@@ -89,6 +100,7 @@
     </TableLayout>
 
     <com.android.volley.toolbox.NetworkImageView
+        android:layout_margin="5dp"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
@@ -99,7 +111,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content">
 
         <Button
             android:layout_width="0sp"
@@ -107,7 +119,8 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/song_info_button"
+            android:text="@string/song_play_button"
+            android:background="@android:color/holo_blue_dark"
             android:id="@+id/buttonListen" />
 
         <Button
@@ -117,6 +130,7 @@
             android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/song_info_buttonDeezer"
+            android:background="@android:color/holo_blue_dark"
             android:id="@+id/buttonDeezer" />
     </LinearLayout>
 

@@ -2,20 +2,15 @@
 <resources>
 
     <string name="app_name">MyDeezer</string>
-
     <string name="main_search_text">Recherche...</string>
     <string name="main_search_result">Artiste\nAlbum</string>
     <string name="main_ico_album">couverture d\'album</string>
     <string name="main_ico_fav">favoris ou non</string>
-
-
     <string name="main_ctx_select">Selectionner</string>
     <string name="main_ctx_favoris_on">Ajouter aux favoris</string>
     <string name="main_ctx_favoris_off">Retirer des favoris</string>
     <string name="main_ctx_favoris_toaston">Le favoris est ajouté"</string>
     <string name="main_ctx_favoris_toastoff">Le favoris est retiré</string>
-
-
     <string name="song_info_title">TITRE Chanson</string>
     <string name="song_info_field_artist">Artiste : </string>
     <string name="song_info_field_favoris">Favoris : </string>
@@ -23,12 +18,12 @@
     <string name="song_info_field_non">Non</string>
     <string name="song_info_field_album">Album : </string>
     <string name="song_info_cover_album">Couverture de l\'album</string>
-    <string name="song_info_button">Ecouter</string>
+    <string name="song_play_button">Ecouter</string>
+    <string name="song_stop_button">Arrêter</string>
     <string name="song_info_buttonDeezer">Voir sur Deezer</string>
-
-
     <string name="info_no_value"> - </string>
-
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

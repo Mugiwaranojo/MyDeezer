@@ -1,4 +1,4 @@
-package mydevmind.com.mydeezer.model;
+package mydevmind.com.mydeezer.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +19,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mydevmind.com.mydeezer.R;
+import mydevmind.com.mydeezer.model.fetcher.VolleyConnectionManager;
+import mydevmind.com.mydeezer.model.modelObject.Music;
 
 /**
  * Created by Joan on 23/06/2014.
@@ -27,13 +29,11 @@ public class MusicAdapter extends BaseAdapter{
 
     private Activity context;
     private ArrayList<Music> musics;
-    private ImageLoader mVolleyImageLoader;
 
-    public MusicAdapter(Activity context, ArrayList<Music> music, ImageLoader loader){
+    public MusicAdapter(Activity context, ArrayList<Music> music){
         super();
         this.context= context;
         this.musics= music;
-        this.mVolleyImageLoader= loader;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class MusicAdapter extends BaseAdapter{
         ImageView imageViewFav = (ImageView) rowView.findViewById(R.id.imgFavListAlbum);
         txtAlbum.setText(musics.get(position).getTitle() + "\n" + musics.get(position).getArtist());
         if(musics.get(position).getCoverUrl()!="") {
-            imageViewAlbum.setImageUrl(musics.get(position).getCoverUrl(), mVolleyImageLoader);
+            imageViewAlbum.setImageUrl(musics.get(position).getCoverUrl(), VolleyConnectionManager.getmVolleyImageLoader());
         }
         if(musics.get(position).isFavorite()){
             imageViewFav.setImageResource(android.R.drawable.star_on);

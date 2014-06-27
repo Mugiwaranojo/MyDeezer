@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/back_drawable"
     android:id="@+id/main_layout"
     tools:context=".MainActivity">
 
@@ -16,7 +17,10 @@
             android:layout_width="0sp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="@string/main_search_text"
+            android:hint="@string/main_search_text"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:textColorHighlight="@android:color/white"
             android:inputType="textAutoComplete"
             android:id="@+id/editTextSearch" />
 
@@ -25,12 +29,15 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_search_category_default"
             android:contentDescription="@string/main_search_text"
+            android:background="@drawable/button_drawable"
             android:id="@+id/buttonSearch" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/listMainSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_drawable"
+        >
     </ListView>
 </LinearLayout>

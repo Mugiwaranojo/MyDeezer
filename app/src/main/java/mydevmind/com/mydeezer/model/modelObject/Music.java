@@ -1,4 +1,4 @@
-package mydevmind.com.mydeezer.model;
+package mydevmind.com.mydeezer.model.modelObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -110,12 +110,5 @@ public class Music implements Serializable{
                          "https://i.scdn.co/image/de86ae567463a2d3577cafbcd76bd248e376c027");
     }
 
-    public static ArrayList<Music> getAllMusics(int n){
-        ArrayList<Music> allMusics= new ArrayList<Music>(n);
-        for(int i=0; i<n; i++){
-            int track= 1+i;
-            allMusics.add(i,new Music("track - "+track, "Unknown Artist", "Unknown Album", 30, false, "", "", "https://i.scdn.co/image/de86ae567463a2d3577cafbcd76bd248e376c027"));
-        }
-        return allMusics;
-    }
+
 }
