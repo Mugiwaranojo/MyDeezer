@@ -132,7 +132,6 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
         fetcher.fetchMusicsForArtist(artist, new OnMusicFetcherResultListener() {
             @Override
             public void onMusicFetcherResult(ArrayList<Music> results, Exception e) {
-
                 //suppression spinner
                 spinner.dismiss();
                 //mise à jours de la liste

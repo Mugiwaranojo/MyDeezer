@@ -13,7 +13,7 @@ public class DeezerMusicFetcher implements MusicFetcher{
 
     @Override
     public void setOnConnectionResultListener(OnConnectionResultListener listener) {
-        listener= listener;
+        this.listener= listener;
     }
     public DeezerMusicFetcher(Context context){
         connectionManager = new VolleyConnectionManager(context);
@@ -24,9 +24,9 @@ public class DeezerMusicFetcher implements MusicFetcher{
     }
 
     @Override
-    public void fetchMusicsForArtist(String artistName, OnMusicFetcherResultListener listen) {
+    public void fetchMusicsForArtist(String artistName, OnMusicFetcherResultListener listener) {
         String url="http://api.deezer.com/search?q=";
         url+= artistName.replace(" ", "%20");
-        connectionManager.performUrlRequest(url, listener);
+        connectionManager.performUrlRequest(url, this.listener);
     }
 }

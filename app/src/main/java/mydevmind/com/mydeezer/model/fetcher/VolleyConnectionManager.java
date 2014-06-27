@@ -57,7 +57,6 @@ public class VolleyConnectionManager implements ConnectionManager {
         request.setTag(this);
         // On ajoute la Request au RequestQueue pour la lancer
         mVolleyRequestQueue.add(request);
-
     }
 
     public void stop(){
