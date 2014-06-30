@@ -2,9 +2,12 @@ package mydevmind.com.mydeezer.fragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,9 +106,20 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                searchText.clearFocus();
                 loadMusicsAsync();
             }
         });
+
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                searchText.clearFocus();
+                loadMusicsAsync();
+                return true;
+            }
+        });
+
         return v;
     }
 

@@ -1,6 +1,7 @@
 package mydevmind.com.mydeezer;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ public class MainActivity extends Activity implements OnMusicSelectedListener, O
             .add(R.id.frameLayout, list)
             .commit();
         }else{  //design tablette
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             list= (MusicListFragment) getFragmentManager().findFragmentById(R.id.musicListFragment);
             detail= (MusicFragment) getFragmentManager().findFragmentById(R.id.musicFragment);
         }

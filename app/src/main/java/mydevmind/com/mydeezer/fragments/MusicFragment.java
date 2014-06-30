@@ -1,6 +1,7 @@
 package mydevmind.com.mydeezer.fragments;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -42,6 +43,8 @@ public class MusicFragment extends Fragment{
 
     private Music music;
     private final static MediaPlayer mediaPlayer = new MediaPlayer();
+
+    private  ProgressDialog spinner;
 
     private OnMusicEditedListener listener;
 
@@ -102,10 +105,21 @@ public class MusicFragment extends Fragment{
                 launchWebBrowser();
             }
         });
+
+        spinner = new ProgressDialog(getActivity());
+
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer player) {
+                player.start();
+                spinner.dismiss();
+            }
+        });
         if(this.music == null){
             music= Music.getDefaultMusic();
         }
+
         refresh();
         return v;
     }
@@ -135,11 +149,7 @@ public class MusicFragment extends Fragment{
                 coverAlbumView.setImageUrl(music.getCoverUrl(), mVolleyImageLoader);
                 coverAlbumView.invalidate();
             }
-            if(!mediaPlayer.isPlaying()){
-               listenButtonView.setText(getString(R.string.song_play_button));
-            }else{
-               listenButtonView.setText(getString(R.string.song_stop_button));
-            }
+            listenButtonView.setText(getString(R.string.song_play_button));
         }
     }
 
@@ -149,15 +159,28 @@ public class MusicFragment extends Fragment{
     }
 
     public void play(){
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(getActivity(), Uri.parse(music.getSampleUrl()));
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            listenButtonView.setText(getString(R.string.song_stop_button));
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        if(listenButtonView.getText().equals(getString(R.string.song_play_button))) {
+            //afficher spinner;
+
+            spinner.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            spinner.setTitle("Chargement en cours...");
+            spinner.setMessage("Patientez, ceci peut prendre quelques secondes");
+            //spinner.setCancelable(false);
+            spinner.show();
+
+            try {
+                mediaPlayer.reset();
+                mediaPlayer.setDataSource(getActivity(), Uri.parse(music.getSampleUrl()));
+                mediaPlayer.prepareAsync();
+                //mediaPlayer.start();
+                listenButtonView.setText(getString(R.string.song_stop_button));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            mediaPlayer.stop();
+            listenButtonView.setText(getString(R.string.song_play_button));
         }
     }
 }

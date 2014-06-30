@@ -120,7 +120,13 @@
             android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/song_play_button"
-            android:background="@android:color/holo_blue_dark"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:background="@drawable/button_drawable"
             android:id="@+id/buttonListen" />
 
         <Button
@@ -130,7 +136,13 @@
             android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/song_info_buttonDeezer"
-            android:background="@android:color/holo_blue_dark"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:background="@drawable/button_drawable"
             android:id="@+id/buttonDeezer" />
     </LinearLayout>
 
