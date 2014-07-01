@@ -23,6 +23,7 @@ public class MainActivity extends Activity implements OnMusicSelectedListener, O
         setContentView(R.layout.activity_main);
 
         if(findViewById(R.id.frameLayout)!=null){ //design telephone
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             list = new MusicListFragment();
             detail = new MusicFragment();
 
@@ -30,7 +31,7 @@ public class MainActivity extends Activity implements OnMusicSelectedListener, O
             .add(R.id.frameLayout, list)
             .commit();
         }else{  //design tablette
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             list= (MusicListFragment) getFragmentManager().findFragmentById(R.id.musicListFragment);
             detail= (MusicFragment) getFragmentManager().findFragmentById(R.id.musicFragment);
         }
@@ -83,10 +84,7 @@ public class MainActivity extends Activity implements OnMusicSelectedListener, O
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     @Override

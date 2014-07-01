@@ -17,10 +17,10 @@ import mydevmind.com.mydeezer.model.BitmapLruCache;
 
 /**
  * Created by Fitec on 27/06/2014.
+ * connection by volley
  */
 public class VolleyConnectionManager implements ConnectionManager {
 
-    private Context context;
     private static RequestQueue mVolleyRequestQueue;
     private static ImageLoader mVolleyImageLoader;
 
@@ -59,8 +59,14 @@ public class VolleyConnectionManager implements ConnectionManager {
         mVolleyRequestQueue.add(request);
     }
 
-    public void stop(){
+    @Override
+    public void cancelAll(){
         mVolleyRequestQueue.cancelAll(this);
+    }
+
+    @Override
+    public void stop(){
+        cancelAll();
         mVolleyRequestQueue.stop();
     }
 }

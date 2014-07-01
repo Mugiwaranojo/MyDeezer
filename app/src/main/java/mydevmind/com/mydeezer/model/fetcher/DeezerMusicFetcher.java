@@ -3,7 +3,8 @@ package mydevmind.com.mydeezer.model.fetcher;
 import android.content.Context;
 
 /**
- * Created by Fitec on 27/06/2014.
+ * Created by Joan on 27/06/2014.
+ * Provider fetch musics
  */
 public class DeezerMusicFetcher implements MusicFetcher{
 
@@ -19,14 +20,16 @@ public class DeezerMusicFetcher implements MusicFetcher{
         connectionManager = new VolleyConnectionManager(context);
     }
 
-    public void setListener(OnConnectionResultListener listener) {
-        this.listener = listener;
-    }
-
     @Override
     public void fetchMusicsForArtist(String artistName, OnMusicFetcherResultListener listener) {
+        connectionManager.cancelAll();
         String url="http://api.deezer.com/search?q=";
         url+= artistName.replace(" ", "+").trim();
         connectionManager.performUrlRequest(url, this.listener);
+    }
+
+    @Override
+    public void stop(){
+        connectionManager.stop();
     }
 }

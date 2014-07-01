@@ -1,13 +1,14 @@
 package mydevmind.com.mydeezer.model.modelObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
- * Created by Fitec on 23/06/2014.
+ * Created by Joan on 23/06/2014.
+ * Class music
  */
 public class Music implements Serializable{
 
+    private String identifier_provider;
     private String title;
     private String artist;
     private String album;
@@ -18,6 +19,7 @@ public class Music implements Serializable{
     private String coverUrl;
 
     public Music(){
+        this.identifier_provider="";
         this.title = "";
         this.artist = "";
         this.album = "";
@@ -28,7 +30,12 @@ public class Music implements Serializable{
         this.coverUrl = "";
     }
 
-    public Music(String title, String artist, String album, Integer duration, boolean isFavorite, String sampleUrl, String link, String coverUrl) {
+    public Music(String identifier){
+        this.identifier_provider= identifier;
+    }
+
+    public Music(String identifier, String title, String artist, String album, Integer duration, boolean isFavorite, String sampleUrl, String link, String coverUrl) {
+        this.identifier_provider= identifier;
         this.title = title;
         this.artist = artist;
         this.album = album;
@@ -37,6 +44,10 @@ public class Music implements Serializable{
         this.sampleUrl = sampleUrl;
         this.link = link;
         this.coverUrl = coverUrl;
+    }
+
+    public String getIdProvider(){
+        return this.identifier_provider;
     }
 
     public String getTitle() {
@@ -104,7 +115,7 @@ public class Music implements Serializable{
     }
 
     public static Music getDefaultMusic(){
-        return new Music("Her favorite song", "Mayer Hawthorne", "Her favorite song", 30, true,
+        return new Music("testSound","Her favorite song", "Mayer Hawthorne", "Her favorite song", 30, true,
                          "https://api.spotify.com/v1/albums/1d1EbySoXWEVztSUsgjpOY",
                          "https://open.spotify.com/album/1d1EbySoXWEVztSUsgjpOY",
                          "https://i.scdn.co/image/de86ae567463a2d3577cafbcd76bd248e376c027");

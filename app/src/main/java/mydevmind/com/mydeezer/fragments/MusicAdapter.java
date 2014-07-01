@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONArray;
@@ -24,6 +23,7 @@ import mydevmind.com.mydeezer.model.modelObject.Music;
 
 /**
  * Created by Joan on 23/06/2014.
+ * MusicAdapter for the ViewList of Musics
  */
 public class MusicAdapter extends BaseAdapter{
 
@@ -54,12 +54,15 @@ public class MusicAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView= inflater.inflate(R.layout.music_list, null);
-        TextView txtAlbum = (TextView) rowView.findViewById(R.id.txtListAlbum);
-        NetworkImageView imageViewAlbum = (NetworkImageView) rowView.findViewById(R.id.imgListAlbum);
-        ImageView imageViewFav = (ImageView) rowView.findViewById(R.id.imgFavListAlbum);
+        View rowView;
+        rowView = inflater.inflate(R.layout.music_list, null);
+        TextView txtAlbum;
+        txtAlbum = (TextView) (rowView != null ? rowView.findViewById(R.id.txtListAlbum) : null);
+        NetworkImageView imageViewAlbum = (NetworkImageView) (rowView != null ? rowView.findViewById(R.id.imgListAlbum) : null);
+        ImageView imageViewFav = (ImageView) (rowView != null ? rowView.findViewById(R.id.imgFavListAlbum) : null);
+        assert txtAlbum != null;
         txtAlbum.setText(musics.get(position).getTitle() + "\n" + musics.get(position).getArtist());
-        if(musics.get(position).getCoverUrl()!="") {
+        if(!musics.get(position).getCoverUrl().equals("")) {
             imageViewAlbum.setImageUrl(musics.get(position).getCoverUrl(), VolleyConnectionManager.getmVolleyImageLoader());
         }
         if(musics.get(position).isFavorite()){
@@ -77,7 +80,7 @@ public class MusicAdapter extends BaseAdapter{
             JSONArray tracks = jsonObject.getJSONArray("data");
             for (int i = 0; i < tracks.length(); i++) {
                 JSONObject track = tracks.getJSONObject(i);
-                Music m = new Music();
+                Music m = new Music(String.valueOf(track.getInt("id")));
                 m.setTitle(track.getString("title"));
                 m.setArtist(track.getJSONObject("artist").getString("name"));
                 m.setAlbum(track.getJSONObject("album").getString("title"));

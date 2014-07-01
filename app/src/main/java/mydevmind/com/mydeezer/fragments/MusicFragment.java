@@ -21,7 +21,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 
 import java.io.IOException;
-import java.net.URI;
 
 import mydevmind.com.mydeezer.R;
 import mydevmind.com.mydeezer.model.BitmapLruCache;
@@ -29,6 +28,7 @@ import mydevmind.com.mydeezer.model.modelObject.Music;
 
 /**
  * Created by Joan on 24/06/2014.
+ * Class fragment du details des musics
  */
 public class MusicFragment extends Fragment{
 
@@ -62,15 +62,15 @@ public class MusicFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_music, null);
 
         // On initialise notre Thread-Pool et notre ImageLoader
-        mVolleyRequestQueue = Volley.newRequestQueue(v.getContext());
+        mVolleyRequestQueue = Volley.newRequestQueue(v != null ? v.getContext() : null);
         mVolleyImageLoader = new ImageLoader(mVolleyRequestQueue, new BitmapLruCache());
         mVolleyRequestQueue.start();
 
-        fieldTitleView= (TextView) v.findViewById(R.id.textViewSongTitle);
-        fieldAlbumView= (TextView) v.findViewById(R.id.textViewValuedAlbum);
-        fieldArtistView= (TextView) v.findViewById(R.id.textViewValuedArtist);
+        fieldTitleView= (TextView) (v != null ? v.findViewById(R.id.textViewSongTitle) : null);
+        fieldAlbumView= (TextView) (v != null ? v.findViewById(R.id.textViewValuedAlbum) : null);
+        fieldArtistView= (TextView) (v != null ?v.findViewById(R.id.textViewValuedArtist) : null);
 
-        favYesView= (RadioButton) v.findViewById(R.id.radioButtonFavOui);
+        favYesView= (RadioButton) (v != null ? v.findViewById(R.id.radioButtonFavOui) : null);
         favYesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,7 +79,7 @@ public class MusicFragment extends Fragment{
             }
         });
 
-        favNoView= (RadioButton) v.findViewById(R.id.radioButtonFavNon);
+        favNoView= (RadioButton) (v != null ? v.findViewById(R.id.radioButtonFavNon) : null);
         favNoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,16 +89,16 @@ public class MusicFragment extends Fragment{
         });
 
 
-        coverAlbumView= (NetworkImageView) v.findViewById(R.id.imageViewAlbum);
+        coverAlbumView= (NetworkImageView) (v != null ? v.findViewById(R.id.imageViewAlbum) : null);
 
-        listenButtonView= (Button) v.findViewById(R.id.buttonListen);
+        listenButtonView= (Button) (v != null ? v.findViewById(R.id.buttonListen) : null);
         listenButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 play();
             }
         });
-        deezerButton= (Button) v.findViewById(R.id.buttonDeezer);
+        deezerButton= (Button) (v != null ? v.findViewById(R.id.buttonDeezer) : null);
         deezerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,7 +145,7 @@ public class MusicFragment extends Fragment{
             } else {
                 favNoView.setChecked(true);
             }
-            if (music.getCoverUrl() != "") {
+            if (!music.getCoverUrl().equals("")) {
                 coverAlbumView.setImageUrl(music.getCoverUrl(), mVolleyImageLoader);
                 coverAlbumView.invalidate();
             }

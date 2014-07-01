@@ -2,10 +2,7 @@ package mydevmind.com.mydeezer.fragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,22 +16,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import mydevmind.com.mydeezer.R;
-import mydevmind.com.mydeezer.model.BitmapLruCache;
 import mydevmind.com.mydeezer.model.fetcher.DeezerMusicFetcher;
-import mydevmind.com.mydeezer.model.fetcher.DummyMusicFetcher;
 import mydevmind.com.mydeezer.model.fetcher.MusicFetcher;
 import mydevmind.com.mydeezer.model.fetcher.OnConnectionResultListener;
 import mydevmind.com.mydeezer.model.fetcher.OnMusicFetcherResultListener;
@@ -49,7 +36,6 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
 
     private ListView listViewMusics;
     private TextView searchText;
-    private ImageButton searchButton;
 
     private ArrayList<Music> musics;
     private MusicAdapter adapter;
@@ -102,7 +88,7 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
             }
         });
 
-        searchButton = (ImageButton) v.findViewById(R.id.buttonSearch);
+        ImageButton searchButton = (ImageButton) v.findViewById(R.id.buttonSearch);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,8 +124,8 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
         //afficher spinner;
         final ProgressDialog spinner = new ProgressDialog(getActivity());
         spinner.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        spinner.setTitle("Recherche en cours...");
-        spinner.setMessage("Patientez, ceci peut prendre quelques secondes");
+        spinner.setTitle(getString(R.string.find_spinner_title));
+        spinner.setMessage(getString(R.string.find_spinner_text));
         //spinner.setCancelable(false);
         spinner.show();
 
@@ -171,6 +157,7 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
     @Override
     public void onDetach() {
         super.onDetach();
+        fetcher.stop();
     }
 
     public void onMusicSelected(Music m){
@@ -186,7 +173,6 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
     public boolean onContextItemSelected(MenuItem item){
         AdapterView.AdapterContextMenuInfo info= (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         Music musicSelected= this.musics.get(info.position);
-        String actionText= "";
         switch (item.getItemId()){
             case ACTION_SELECT:
                 onMusicSelected(musicSelected);
