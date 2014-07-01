@@ -1,4 +1,4 @@
-package mydevmind.com.mydeezer.model;
+package mydevmind.com.mydeezer.model.fetcher;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;

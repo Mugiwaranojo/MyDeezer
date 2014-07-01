@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mydevmind.com.mydeezer.R;
+import mydevmind.com.mydeezer.model.Repository.DatabaseManager;
 import mydevmind.com.mydeezer.model.fetcher.VolleyConnectionManager;
 import mydevmind.com.mydeezer.model.modelObject.Music;
 
@@ -73,7 +74,7 @@ public class MusicAdapter extends BaseAdapter{
         return rowView;
     }
 
-    public void updateMembers(JSONObject jsonObject) {
+    public void updateMembers(JSONObject jsonObject, DatabaseManager db) {
         musics.clear();
         try {
             // Getting JSON Array node
@@ -85,7 +86,7 @@ public class MusicAdapter extends BaseAdapter{
                 m.setArtist(track.getJSONObject("artist").getString("name"));
                 m.setAlbum(track.getJSONObject("album").getString("title"));
                 m.setDuration(track.getInt("duration"));
-                m.setFavorite(false);
+                m.setFavorite(db.isFavorite(m));
                 m.setSampleUrl(track.getString("preview"));
                 m.setLink(track.getString("link"));
                 m.setCoverUrl(track.getJSONObject("album").getString("cover"));

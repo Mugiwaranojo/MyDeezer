@@ -24,7 +24,7 @@ public class DeezerMusicFetcher implements MusicFetcher{
     public void fetchMusicsForArtist(String artistName, OnMusicFetcherResultListener listener) {
         connectionManager.cancelAll();
         String url="http://api.deezer.com/search?q=";
-        url+= artistName.replace(" ", "+").trim();
+        url+= artistName.trim().replace(" ", "+");
         connectionManager.performUrlRequest(url, this.listener);
     }
 

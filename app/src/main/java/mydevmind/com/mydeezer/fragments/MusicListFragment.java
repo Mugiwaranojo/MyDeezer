@@ -3,6 +3,7 @@ package mydevmind.com.mydeezer.fragments;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mydevmind.com.mydeezer.R;
+import mydevmind.com.mydeezer.model.Repository.DatabaseManager;
 import mydevmind.com.mydeezer.model.fetcher.DeezerMusicFetcher;
 import mydevmind.com.mydeezer.model.fetcher.MusicFetcher;
 import mydevmind.com.mydeezer.model.fetcher.OnConnectionResultListener;
@@ -41,6 +44,13 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
     private MusicAdapter adapter;
     private MusicFetcher fetcher;
 
+    private DatabaseManager db;
+
+    public void setDatabaseManager(DatabaseManager db){
+        this.db= db;
+    }
+
+
     //listeners
     private OnMusicSelectedListener onMusicSelectedListener;
     private OnMusicEditedListener onMusicEditedListener;
@@ -57,6 +67,8 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.fragment_music_list, null);
 
+        db= new DatabaseManager(getActivity(), 1);
+
         //list des musics
         musics = new ArrayList<Music>();
         fetcher = new DeezerMusicFetcher(getActivity().getBaseContext());
@@ -64,16 +76,31 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
 
         listViewMusics = (ListView) v.findViewById(R.id.listMainSearch);
         searchText = (TextView) v.findViewById(R.id.editTextSearch);
-        adapter= new MusicAdapter(getActivity(), musics);
-
-        listViewMusics.setAdapter(adapter);
-        listViewMusics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchText.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                onMusicSelected(musics.get(position));
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(!searchText.getText().toString().equals("")) {
+                    final ArrayList<String> listQueries = db.getRequestMatchingPredicate(searchText.getText().toString());
+                    for(int n=0; n<listQueries.size(); n++){
+                        Log.d("history registred "+n, listQueries.get(n));
+                    }
+                    ArrayAdapter<String> adapterPredicate = new ArrayAdapter<String>(getActivity(), R.layout.search_list, listQueries);
+                    listViewMusics.setAdapter(adapterPredicate);
+                    listViewMusics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            String request=listQueries.get(i);
+                            searchText.setText(request);
+                            loadMusicsAsync();
+                        }
+                    });
+                }
+                return false;
             }
         });
 
+        adapter= new MusicAdapter(getActivity(), musics);
+        listViewMusics.setAdapter(adapter);
         listViewMusics.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
@@ -112,7 +139,7 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
     @Override
     public void onConnectionResult(JSONObject result, Exception e) {
         if(e==null){
-            adapter.updateMembers(result);
+            adapter.updateMembers(result, db);
         }else{
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT);
         }
@@ -120,7 +147,7 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
 
     private void loadMusicsAsync() {
         String artist= searchText.getText().toString();
-
+        db.addToHistory(artist);
         //afficher spinner;
         final ProgressDialog spinner = new ProgressDialog(getActivity());
         spinner.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -128,6 +155,15 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
         spinner.setMessage(getString(R.string.find_spinner_text));
         //spinner.setCancelable(false);
         spinner.show();
+
+        musics.clear();
+        listViewMusics.setAdapter(adapter);
+        listViewMusics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                onMusicSelected(musics.get(position));
+            }
+        });
 
         fetcher.fetchMusicsForArtist(artist, new OnMusicFetcherResultListener() {
             @Override
@@ -180,11 +216,13 @@ public class MusicListFragment extends Fragment implements OnConnectionResultLis
             case ACTION_FAV_ON:
                 musicSelected.setFavorite(true);
                 onMusicEditedListener.onMusicEdited(musicSelected);
+                db.add(musicSelected);
                 refresh();
                 break;
             case ACTION_FAV_OFF:
                 musicSelected.setFavorite(false);
                 onMusicEditedListener.onMusicEdited(musicSelected);
+                db.remove(musicSelected);
                 refresh();
                 break;
         }

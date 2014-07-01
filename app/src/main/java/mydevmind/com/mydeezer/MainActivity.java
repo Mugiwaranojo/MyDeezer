@@ -10,17 +10,21 @@ import mydevmind.com.mydeezer.fragments.MusicFragment;
 import mydevmind.com.mydeezer.fragments.MusicListFragment;
 import mydevmind.com.mydeezer.fragments.OnMusicEditedListener;
 import mydevmind.com.mydeezer.fragments.OnMusicSelectedListener;
+import mydevmind.com.mydeezer.model.Repository.DatabaseManager;
 import mydevmind.com.mydeezer.model.modelObject.Music;
 
 public class MainActivity extends Activity implements OnMusicSelectedListener, OnMusicEditedListener {
 
     MusicListFragment list;
     MusicFragment detail;
+    DatabaseManager db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        db = new DatabaseManager(this, 1);
 
         if(findViewById(R.id.frameLayout)!=null){ //design telephone
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -34,10 +38,15 @@ public class MainActivity extends Activity implements OnMusicSelectedListener, O
             //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             list= (MusicListFragment) getFragmentManager().findFragmentById(R.id.musicListFragment);
             detail= (MusicFragment) getFragmentManager().findFragmentById(R.id.musicFragment);
+            getFragmentManager().beginTransaction()
+                    .hide(detail)
+                    .commit();
         }
         list.setOnMusicSelectedListener(this);
         list.setOnMusicEditedListener(this);
+        list.setDatabaseManager(db);
         detail.setOnMusicEditedListener(this);
+        detail.setDatabaseManager(db);
     }
 
     @Override
@@ -54,6 +63,10 @@ public class MainActivity extends Activity implements OnMusicSelectedListener, O
                         .add(R.id.frameLayout, detail)
                         .commit();
             }
+        }else{
+            getFragmentManager().beginTransaction()
+                .show(detail)
+                .commit();
         }
         detail.setSelectedMusic(music);
         detail.refresh();

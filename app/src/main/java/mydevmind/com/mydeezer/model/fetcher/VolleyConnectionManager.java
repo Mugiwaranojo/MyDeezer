@@ -13,8 +13,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import mydevmind.com.mydeezer.model.BitmapLruCache;
-
 /**
  * Created by Fitec on 27/06/2014.
  * connection by volley

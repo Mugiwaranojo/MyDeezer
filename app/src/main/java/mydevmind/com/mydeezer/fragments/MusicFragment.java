@@ -23,7 +23,8 @@ import com.android.volley.toolbox.Volley;
 import java.io.IOException;
 
 import mydevmind.com.mydeezer.R;
-import mydevmind.com.mydeezer.model.BitmapLruCache;
+import mydevmind.com.mydeezer.model.Repository.DatabaseManager;
+import mydevmind.com.mydeezer.model.fetcher.BitmapLruCache;
 import mydevmind.com.mydeezer.model.modelObject.Music;
 
 /**
@@ -45,6 +46,12 @@ public class MusicFragment extends Fragment{
     private final static MediaPlayer mediaPlayer = new MediaPlayer();
 
     private  ProgressDialog spinner;
+
+    private DatabaseManager db;
+
+    public void setDatabaseManager(DatabaseManager db){
+        this.db= db;
+    }
 
     private OnMusicEditedListener listener;
 
@@ -76,6 +83,8 @@ public class MusicFragment extends Fragment{
             public void onClick(View view) {
                 music.setFavorite(true);
                 listener.onMusicEdited(music);
+                db.add(music);
+
             }
         });
 
@@ -85,6 +94,7 @@ public class MusicFragment extends Fragment{
             public void onClick(View view) {
                 music.setFavorite(false);
                 listener.onMusicEdited(music);
+                db.remove(music);
             }
         });
 
@@ -116,11 +126,9 @@ public class MusicFragment extends Fragment{
                 spinner.dismiss();
             }
         });
-        if(this.music == null){
-            music= Music.getDefaultMusic();
+        if(this.music != null){
+            refresh();
         }
-
-        refresh();
         return v;
     }
 
