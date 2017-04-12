@@ -1,29 +1,26 @@
 package mydevmind.com.mydeezer.model;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.androidquery.util.XmlDom;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.SAXException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Fitec on 25/06/2014.
@@ -32,12 +29,14 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
 
     private ListView listView;
     private ArrayList<Music> musics;
-    private Activity context;
+    private ProgressDialog spinner;
+    private Context  context;
 
-    public DownloadJsonTask(Activity context, ListView listView, ArrayList<Music> musics) {
-        this.context= context;
+    public DownloadJsonTask(Context context, ListView listView, ArrayList<Music> musics, ProgressDialog spinner) {
         this.listView = listView;
-        this.musics= musics;
+        this.musics = musics;
+        this.spinner = spinner;
+        this.context = context;
     }
 
     @Override
@@ -55,12 +54,18 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
                 m.setArtist(track.getJSONObject("artist").getString("name"));
                 m.setAlbum(track.getJSONObject("album").getString("title"));
                 m.setDuration(track.getInt("duration"));
-                m.setFavorite(false);
+                m.setFavorite(true);
                 m.setSampleUrl(track.getString("preview"));
                 m.setLink(track.getString("link"));
                 m.setCoverUrl(track.getJSONObject("album").getString("cover"));
+                if(!ManageFavorites.isFavorite(context, m)){
+                    m.setFavorite(false);
+                }
                 musics.add(m);
+                ((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
+                spinner.dismiss();
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,7 +78,39 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
     }
 
     private String download_xmlDom(String url){
-        return "";
+        String result="";
+        try {
+            URL aURL = new URL(url);
+            URLConnection conn = aURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            result = convertStreamToString(is);
+            is.close();
+        } catch (IOException e) {
+            Log.e("Hub", "Error getting the image from server : " + e.getMessage().toString());
+        }
+
+        return result;
     }
 
+    private String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
 }

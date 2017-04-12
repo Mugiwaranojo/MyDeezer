@@ -118,4 +118,14 @@ public class Music implements Serializable{
         }
         return allMusics;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Music){
+            Music tmp= (Music) o;
+            return this.artist.equals(tmp.artist) && this.album.equals(tmp.album) && this.title.equals(tmp.title);
+        }else {
+            return false;
+        }
+    }
 }

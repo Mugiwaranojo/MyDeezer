@@ -27,13 +27,11 @@ public class MusicAdapter extends BaseAdapter{
 
     private Activity context;
     private ArrayList<Music> musics;
-    private ImageLoader mVolleyImageLoader;
 
-    public MusicAdapter(Activity context, ArrayList<Music> music, ImageLoader loader){
+    public MusicAdapter(Activity context, ArrayList<Music> music){
         super();
         this.context= context;
         this.musics= music;
-        this.mVolleyImageLoader= loader;
     }
 
     @Override
@@ -56,11 +54,12 @@ public class MusicAdapter extends BaseAdapter{
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView= inflater.inflate(R.layout.music_list, null);
         TextView txtAlbum = (TextView) rowView.findViewById(R.id.txtListAlbum);
-        NetworkImageView imageViewAlbum = (NetworkImageView) rowView.findViewById(R.id.imgListAlbum);
+        ImageView imageViewAlbum = (ImageView) rowView.findViewById(R.id.imgListAlbum);
         ImageView imageViewFav = (ImageView) rowView.findViewById(R.id.imgFavListAlbum);
         txtAlbum.setText(musics.get(position).getTitle() + "\n" + musics.get(position).getArtist());
         if(musics.get(position).getCoverUrl()!="") {
-            imageViewAlbum.setImageUrl(musics.get(position).getCoverUrl(), mVolleyImageLoader);
+            DownloadImagesTask imagesTask= new DownloadImagesTask(imageViewAlbum);
+            imagesTask.execute(musics.get(position).getCoverUrl());
         }
         if(musics.get(position).isFavorite()){
             imageViewFav.setImageResource(android.R.drawable.star_on);
@@ -69,7 +68,7 @@ public class MusicAdapter extends BaseAdapter{
         }
         return rowView;
     }
-
+    /*
     public void updateMembers(JSONObject jsonObject) {
         musics.clear();
         try {
@@ -92,5 +91,5 @@ public class MusicAdapter extends BaseAdapter{
             e.printStackTrace();
         }
         notifyDataSetChanged();
-    }
+    }*/
 }

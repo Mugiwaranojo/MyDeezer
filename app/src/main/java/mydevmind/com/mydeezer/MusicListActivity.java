@@ -1,6 +1,7 @@
 package mydevmind.com.mydeezer;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,27 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import mydevmind.com.mydeezer.model.BitmapLruCache;
 import mydevmind.com.mydeezer.model.DownloadJsonTask;
+import mydevmind.com.mydeezer.model.IOnFavoriteChange;
+import mydevmind.com.mydeezer.model.ManageFavorites;
 import mydevmind.com.mydeezer.model.Music;
 import mydevmind.com.mydeezer.model.MusicAdapter;
 
@@ -47,11 +40,9 @@ public class MusicListActivity extends Activity {
     private TextView searchText;
     private ImageButton searchButton;
 
-    private RequestQueue mVolleyRequestQueue;
+    //private RequestQueue mVolleyRequestQueue;
     private ImageLoader mVolleyImageLoader;
     private MusicAdapter adapter;
-    private String tempSearch = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +50,9 @@ public class MusicListActivity extends Activity {
         setContentView(R.layout.activity_music_list);
 
         // On initialise notre Thread-Pool et notre ImageLoader
-        mVolleyRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        mVolleyImageLoader = new ImageLoader(mVolleyRequestQueue, new BitmapLruCache());
-        mVolleyRequestQueue.start();
+        //mVolleyRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        //mVolleyImageLoader = new ImageLoader(mVolleyRequestQueue, new BitmapLruCache());
+        //mVolleyRequestQueue.start();
 
         //musics = Music.getAllMusics(25);
         musics = new ArrayList<Music>();
@@ -70,7 +61,7 @@ public class MusicListActivity extends Activity {
         listViewMusics = (ListView) findViewById(R.id.listMainSearch);
         searchText = (TextView) findViewById(R.id.editTextSearch);
 
-        adapter= new MusicAdapter(this, musics, mVolleyImageLoader);
+        adapter= new MusicAdapter(this, musics);
 
         listViewMusics.setAdapter(adapter);
         listViewMusics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -102,11 +93,19 @@ public class MusicListActivity extends Activity {
                 searchMusics(searchText.getText().toString());
             }
         });
+
+        ManageFavorites.setListener(new IOnFavoriteChange() {
+            @Override
+            public void onFavoriteChange(Music m, boolean isFavorite) {
+                musics.get(musics.indexOf(m)).setFavorite(isFavorite);
+                ((BaseAdapter) listViewMusics.getAdapter()).notifyDataSetChanged();
+            }
+        });
     }
 
-    public RequestQueue getVolleyRequestQueue() {
+    /*public RequestQueue getVolleyRequestQueue() {
         return mVolleyRequestQueue;
-    }
+    }*/
 
     public ImageLoader getVolleyImageLoader() {
         return mVolleyImageLoader;
@@ -114,8 +113,8 @@ public class MusicListActivity extends Activity {
 
     @Override
     protected void onStop() {
-        mVolleyRequestQueue.cancelAll(this);
-        mVolleyRequestQueue.stop();
+        //mVolleyRequestQueue.cancelAll(this);
+        //mVolleyRequestQueue.stop();
         super.onStop();
     }
 
@@ -135,7 +134,7 @@ public class MusicListActivity extends Activity {
         // JsonArrayRequest hérite de Request et transforme automatiquement les données reçues en un JSONArray
         String url= DEEZER_SEARCH_URL+textSearch.replaceAll(" ", "%20");
         Log.d("query JSON to search : ", url);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+        /*JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
@@ -143,6 +142,7 @@ public class MusicListActivity extends Activity {
                     adapter.updateMembers(jsonObject);
                 }
             }, new Response.ErrorListener() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 // Le code suivant est appelé lorsque Volley n'a pas réussi à récupérer le résultat de la requête
@@ -151,7 +151,17 @@ public class MusicListActivity extends Activity {
         });
         request.setTag(this);
         // On ajoute la Request au RequestQueue pour la lancer
-        mVolleyRequestQueue.add(request);
+        mVolleyRequestQueue.add(request);*/
+        // Afficher le spinner (busy message)
+        final ProgressDialog spinner = new ProgressDialog(this);
+        spinner.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        spinner.setTitle("Loading songs of " + textSearch);
+        spinner.setMessage("Find songs in progress...");
+        spinner.setCancelable(false);
+        spinner.show();
+
+        DownloadJsonTask jsonTask = new DownloadJsonTask(this, listViewMusics, musics, spinner);
+        jsonTask.execute(url);
     }
 
     @Override
@@ -163,13 +173,16 @@ public class MusicListActivity extends Activity {
                 break;
             case ACTION_FAV_ON:
                 musics.get(info.position).setFavorite(true);
+                ManageFavorites.add(this, musics.get(info.position));
                 Toast.makeText(this, getString(R.string.main_ctx_favoris_toaston), Toast.LENGTH_SHORT).show();
                 break;
             case ACTION_FAV_OFF:
+                ManageFavorites.remove(this, musics.get(info.position));
                 musics.get(info.position).setFavorite(false);
                 Toast.makeText(this, getString(R.string.main_ctx_favoris_toastoff), Toast.LENGTH_SHORT).show();
                 break;
         }
+        ((BaseAdapter) listViewMusics.getAdapter()).notifyDataSetChanged();
         return super.onContextItemSelected(item);
     }
 
@@ -186,7 +199,10 @@ public class MusicListActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_favorites) {
+            musics = ManageFavorites.load(this);
+            adapter= new MusicAdapter(this, musics);
+            listViewMusics.setAdapter(adapter);
             return true;
         }
         return super.onOptionsItemSelected(item);

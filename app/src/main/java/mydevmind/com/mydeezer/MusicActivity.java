@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -19,7 +18,7 @@ import com.android.volley.toolbox.Volley;
 import java.io.IOException;
 
 import mydevmind.com.mydeezer.model.BitmapLruCache;
-import mydevmind.com.mydeezer.model.DownloadImagesTask;
+import mydevmind.com.mydeezer.model.ManageFavorites;
 import mydevmind.com.mydeezer.model.Music;
 
 /**
@@ -36,6 +35,7 @@ public class MusicActivity extends Activity {
     private ImageLoader mVolleyImageLoader;
     private Music tempM;
 
+    private MediaPlayer player = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,22 @@ public class MusicActivity extends Activity {
         fieldArtistView= (TextView) findViewById(R.id.textViewValuedArtist);
 
         favYesView= (RadioButton) findViewById(R.id.radioButtonFavOui);
+        favYesView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tempM.setFavorite(true);
+                ManageFavorites.add(getApplicationContext(), tempM);
+            }
+        });
+
         favNoView= (RadioButton) findViewById(R.id.radioButtonFavNon);
+        favNoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tempM.setFavorite(false);
+                ManageFavorites.remove(getApplicationContext(), tempM);
+            }
+        });
 
         coverAlbumView= (NetworkImageView) findViewById(R.id.imageViewAlbum);
 
@@ -109,6 +124,17 @@ public class MusicActivity extends Activity {
     }
 
     public void play(){
-
+        try {
+            if(!player.isPlaying()) {
+                player.reset();
+                player.setDataSource(this, Uri.parse(this.tempM.getSampleUrl()));
+                player.prepare();
+                player.start();
+            }else{
+                player.stop();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
