@@ -2,7 +2,6 @@ package mydevmind.com.mydeezer.Repository;
 
 import java.util.ArrayList;
 
-import mydevmind.com.mydeezer.MusicListActivity;
 import mydevmind.com.mydeezer.model.Music;
 
 /**

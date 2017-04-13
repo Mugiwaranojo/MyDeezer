@@ -32,14 +32,12 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
     private ArrayList<Music> musics;
     private ProgressDialog spinner;
     private DatabaseManager db;
-    private Context  context;
 
     public DownloadJsonTask(Context context, ListView listView, ArrayList<Music> musics, ProgressDialog spinner) {
         this.listView = listView;
         this.musics = musics;
         this.spinner = spinner;
-        this.context = context;
-        this.db = new DatabaseManager(context, 1);
+        this.db = DatabaseManager.getInstance(context);
     }
 
     @Override

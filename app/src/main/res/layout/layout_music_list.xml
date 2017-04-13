@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/main_layout"
-    tools:context=".MusicListActivity">
+    tools:context=".fragments.MusicListFragment">
 
     <LinearLayout
         android:orientation="horizontal"

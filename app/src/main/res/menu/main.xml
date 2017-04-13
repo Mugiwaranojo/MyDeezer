@@ -2,7 +2,5 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
     <item android:id="@+id/action_favorites"
-        android:title="@string/action_favorites"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:title="@string/action_favorites" />
 </menu>

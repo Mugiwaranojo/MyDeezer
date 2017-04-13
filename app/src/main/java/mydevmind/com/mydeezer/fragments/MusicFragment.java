@@ -1,12 +1,15 @@
-package mydevmind.com.mydeezer;
+package mydevmind.com.mydeezer.fragments;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -17,23 +20,29 @@ import com.android.volley.toolbox.Volley;
 
 import java.io.IOException;
 
+import mydevmind.com.mydeezer.R;
 import mydevmind.com.mydeezer.Repository.DatabaseManager;
 import mydevmind.com.mydeezer.model.BitmapLruCache;
-import mydevmind.com.mydeezer.Repository.ManageFavorites;
+import mydevmind.com.mydeezer.model.DownloadImagesTask;
+import mydevmind.com.mydeezer.model.IOnFavoriteChange;
 import mydevmind.com.mydeezer.model.Music;
 
 /**
  * Created by Joan on 24/06/2014.
  */
-public class MusicActivity extends Activity {
+public class MusicFragment extends Fragment {
 
     TextView fieldArtistView, fieldTitleView, fieldAlbumView;
     RadioButton favYesView, favNoView;
-    NetworkImageView coverAlbumView;
+    ImageView coverAlbumView;
     Button  listenButtonView, deezerButton;
 
-    private RequestQueue mVolleyRequestQueue;
-    private ImageLoader mVolleyImageLoader;
+    private IOnFavoriteChange onFavoriteChangeListener;
+
+    public void setOnFavoriteChangeListener(IOnFavoriteChange onFavoriteChangeListener) {
+        this.onFavoriteChangeListener = onFavoriteChangeListener;
+    }
+
     private Music tempM;
 
     private DatabaseManager db;
@@ -41,87 +50,77 @@ public class MusicActivity extends Activity {
     private MediaPlayer player = new MediaPlayer();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music);
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle savedInstanceState) {
+        View v= inflater.inflate(R.layout.layout_music, null);
 
-        db = new DatabaseManager(this, 1);
+        db = DatabaseManager.getInstance(getActivity());
 
-        // On initialise notre Thread-Pool et notre ImageLoader
-        mVolleyRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        mVolleyImageLoader = new ImageLoader(mVolleyRequestQueue, new BitmapLruCache());
-        mVolleyRequestQueue.start();
+        fieldTitleView= (TextView)  v.findViewById(R.id.textViewSongTitle);
+        fieldAlbumView= (TextView)  v.findViewById(R.id.textViewValuedAlbum);
+        fieldArtistView= (TextView) v.findViewById(R.id.textViewValuedArtist);
 
-        fieldTitleView= (TextView) findViewById(R.id.textViewSongTitle);
-        fieldAlbumView= (TextView) findViewById(R.id.textViewValuedAlbum);
-        fieldArtistView= (TextView) findViewById(R.id.textViewValuedArtist);
-
-        favYesView= (RadioButton) findViewById(R.id.radioButtonFavOui);
+        favYesView= (RadioButton) v.findViewById(R.id.radioButtonFavOui);
         favYesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tempM.setFavorite(true);
-                //ManageFavorites.add(getApplicationContext(), tempM);
                 db.add(tempM);
+                onFavoriteChangeListener.onFavoriteChange(tempM, true);
+
             }
         });
 
-        favNoView= (RadioButton) findViewById(R.id.radioButtonFavNon);
+        favNoView= (RadioButton) v.findViewById(R.id.radioButtonFavNon);
         favNoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tempM.setFavorite(false);
-                //ManageFavorites.remove(getApplicationContext(), tempM);
                 db.remove(tempM);
+                onFavoriteChangeListener.onFavoriteChange(tempM, false);
             }
         });
 
-        coverAlbumView= (NetworkImageView) findViewById(R.id.imageViewAlbum);
+        coverAlbumView= (ImageView) v.findViewById(R.id.imageViewAlbum);
 
-        listenButtonView= (Button) findViewById(R.id.buttonListen);
+        listenButtonView= (Button) v.findViewById(R.id.buttonListen);
         listenButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 play();
             }
         });
-        deezerButton= (Button) findViewById(R.id.buttonDeezer);
+        deezerButton= (Button) v.findViewById(R.id.buttonDeezer);
         deezerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchWebBrowser();
             }
         });
+        refresh();
+        return v;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Intent myIntent= getIntent();
-        Music music= (Music) myIntent.getSerializableExtra("musicSelected");
-        setSelectedMusic(music);
-    }
-
-    @Override
-    protected void onStop() {
-        mVolleyRequestQueue.cancelAll(this);
-        mVolleyRequestQueue.stop();
-        super.onStop();
-    }
 
     public void setSelectedMusic(Music m){
         tempM= m;
-        fieldTitleView.setText(m.getTitle());
-        fieldAlbumView.setText(m.getAlbum());
-        fieldArtistView.setText(m.getArtist());
-        if(m.isFavorite()){
+        if(fieldTitleView!=null) {
+            refresh();
+        }
+    }
+
+    public void refresh(){
+        fieldTitleView.setText(tempM.getTitle());
+        fieldAlbumView.setText(tempM.getAlbum());
+        fieldArtistView.setText(tempM.getArtist());
+        if(tempM.isFavorite()){
             favYesView.setChecked(true);
         }else{
             favNoView.setChecked(true);
         }
-        if(m.getCoverUrl()!="") {
-            coverAlbumView.setImageUrl(m.getCoverUrl(), mVolleyImageLoader);
-            coverAlbumView.invalidate();
+        if(tempM.getCoverUrl()!="") {
+            coverAlbumView.setImageResource(android.R.drawable.ic_menu_gallery);
+            DownloadImagesTask imagesTask= new DownloadImagesTask(coverAlbumView);
+            imagesTask.execute(tempM.getCoverUrl());
         }
     }
 
@@ -134,7 +133,7 @@ public class MusicActivity extends Activity {
         try {
             if(!player.isPlaying()) {
                 player.reset();
-                player.setDataSource(this, Uri.parse(this.tempM.getSampleUrl()));
+                player.setDataSource(getActivity(), Uri.parse(this.tempM.getSampleUrl()));
                 player.prepare();
                 player.start();
             }else{

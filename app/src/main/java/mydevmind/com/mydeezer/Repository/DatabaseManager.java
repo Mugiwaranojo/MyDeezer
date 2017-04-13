@@ -19,7 +19,16 @@ public class DatabaseManager extends SQLiteOpenHelper implements IFavoriteReposi
     private static final String DATABASE_NAME= "mydb.sqlite";
     private static final int CURRENT_DB_VERSION = 1;
 
-    public DatabaseManager(Context context, int version) {
+    private static DatabaseManager instance;
+
+    public static DatabaseManager getInstance(Context context){
+        if(instance==null){
+            instance = new DatabaseManager(context);
+        }
+        return instance;
+    }
+
+    private DatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, CURRENT_DB_VERSION);
     }
 
