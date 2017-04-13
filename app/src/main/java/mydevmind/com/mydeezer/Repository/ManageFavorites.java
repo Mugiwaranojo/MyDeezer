@@ -1,4 +1,4 @@
-package mydevmind.com.mydeezer.model;
+package mydevmind.com.mydeezer.Repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import mydevmind.com.mydeezer.model.IOnFavoriteChange;
+import mydevmind.com.mydeezer.model.Music;
 
 /**
  * Created by Mugiwara on 11/04/2017.

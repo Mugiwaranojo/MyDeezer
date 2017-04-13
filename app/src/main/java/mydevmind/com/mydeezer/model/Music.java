@@ -11,7 +11,6 @@ public class Music implements Serializable{
     private String title;
     private String artist;
     private String album;
-    private Integer duration;
     private boolean isFavorite;
     private String sampleUrl;
     private String link;
@@ -21,7 +20,6 @@ public class Music implements Serializable{
         this.title = "";
         this.artist = "";
         this.album = "";
-        this.duration = 0;
         this.isFavorite = false;
         this.sampleUrl = "";
         this.link = "";
@@ -32,7 +30,6 @@ public class Music implements Serializable{
         this.title = title;
         this.artist = artist;
         this.album = album;
-        this.duration = duration;
         this.isFavorite = isFavorite;
         this.sampleUrl = sampleUrl;
         this.link = link;
@@ -61,14 +58,6 @@ public class Music implements Serializable{
 
     public void setAlbum(String album) {
         this.album = album;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
     }
 
     public boolean isFavorite() {

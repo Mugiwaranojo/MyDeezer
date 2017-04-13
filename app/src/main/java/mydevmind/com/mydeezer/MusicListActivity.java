@@ -20,9 +20,10 @@ import com.android.volley.toolbox.ImageLoader;
 
 import java.util.ArrayList;
 
+import mydevmind.com.mydeezer.Repository.DatabaseManager;
 import mydevmind.com.mydeezer.model.DownloadJsonTask;
 import mydevmind.com.mydeezer.model.IOnFavoriteChange;
-import mydevmind.com.mydeezer.model.ManageFavorites;
+import mydevmind.com.mydeezer.Repository.ManageFavorites;
 import mydevmind.com.mydeezer.model.Music;
 import mydevmind.com.mydeezer.model.MusicAdapter;
 
@@ -44,11 +45,14 @@ public class MusicListActivity extends Activity {
     private ImageLoader mVolleyImageLoader;
     private MusicAdapter adapter;
 
+    private DatabaseManager db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_list);
 
+        db = new DatabaseManager(this, 1);
         // On initialise notre Thread-Pool et notre ImageLoader
         //mVolleyRequestQueue = Volley.newRequestQueue(getApplicationContext());
         //mVolleyImageLoader = new ImageLoader(mVolleyRequestQueue, new BitmapLruCache());
@@ -94,13 +98,13 @@ public class MusicListActivity extends Activity {
             }
         });
 
-        ManageFavorites.setListener(new IOnFavoriteChange() {
+        /*ManageFavorites.setListener(new IOnFavoriteChange() {
             @Override
             public void onFavoriteChange(Music m, boolean isFavorite) {
                 musics.get(musics.indexOf(m)).setFavorite(isFavorite);
                 ((BaseAdapter) listViewMusics.getAdapter()).notifyDataSetChanged();
             }
-        });
+        });*/
     }
 
     /*public RequestQueue getVolleyRequestQueue() {
@@ -173,12 +177,15 @@ public class MusicListActivity extends Activity {
                 break;
             case ACTION_FAV_ON:
                 musics.get(info.position).setFavorite(true);
-                ManageFavorites.add(this, musics.get(info.position));
+                //ManageFavorites.add(this, musics.get(info.position));
+                db.add(musics.get(info.position));
                 Toast.makeText(this, getString(R.string.main_ctx_favoris_toaston), Toast.LENGTH_SHORT).show();
                 break;
             case ACTION_FAV_OFF:
-                ManageFavorites.remove(this, musics.get(info.position));
+                //ManageFavorites.remove(this, musics.get(info.position));
+                db.remove(musics.get(info.position));
                 musics.get(info.position).setFavorite(false);
+
                 Toast.makeText(this, getString(R.string.main_ctx_favoris_toastoff), Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -200,7 +207,8 @@ public class MusicListActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_favorites) {
-            musics = ManageFavorites.load(this);
+            //musics = ManageFavorites.load(this);
+            musics= db.getAll();
             adapter= new MusicAdapter(this, musics);
             listViewMusics.setAdapter(adapter);
             return true;

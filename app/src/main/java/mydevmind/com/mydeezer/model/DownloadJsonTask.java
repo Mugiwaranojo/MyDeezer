@@ -3,7 +3,6 @@ package mydevmind.com.mydeezer.model;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.BaseAdapter;
@@ -13,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +19,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+
+import mydevmind.com.mydeezer.Repository.DatabaseManager;
+import mydevmind.com.mydeezer.Repository.ManageFavorites;
 
 /**
  * Created by Fitec on 25/06/2014.
@@ -30,6 +31,7 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
     private ListView listView;
     private ArrayList<Music> musics;
     private ProgressDialog spinner;
+    private DatabaseManager db;
     private Context  context;
 
     public DownloadJsonTask(Context context, ListView listView, ArrayList<Music> musics, ProgressDialog spinner) {
@@ -37,6 +39,7 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
         this.musics = musics;
         this.spinner = spinner;
         this.context = context;
+        this.db = new DatabaseManager(context, 1);
     }
 
     @Override
@@ -53,12 +56,11 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
                 m.setTitle(track.getString("title"));
                 m.setArtist(track.getJSONObject("artist").getString("name"));
                 m.setAlbum(track.getJSONObject("album").getString("title"));
-                m.setDuration(track.getInt("duration"));
                 m.setFavorite(true);
                 m.setSampleUrl(track.getString("preview"));
                 m.setLink(track.getString("link"));
                 m.setCoverUrl(track.getJSONObject("album").getString("cover"));
-                if(!ManageFavorites.isFavorite(context, m)){
+                if(!db.isFavorite(m)){
                     m.setFavorite(false);
                 }
                 musics.add(m);

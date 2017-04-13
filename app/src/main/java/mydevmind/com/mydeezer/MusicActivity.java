@@ -17,8 +17,9 @@ import com.android.volley.toolbox.Volley;
 
 import java.io.IOException;
 
+import mydevmind.com.mydeezer.Repository.DatabaseManager;
 import mydevmind.com.mydeezer.model.BitmapLruCache;
-import mydevmind.com.mydeezer.model.ManageFavorites;
+import mydevmind.com.mydeezer.Repository.ManageFavorites;
 import mydevmind.com.mydeezer.model.Music;
 
 /**
@@ -35,12 +36,16 @@ public class MusicActivity extends Activity {
     private ImageLoader mVolleyImageLoader;
     private Music tempM;
 
+    private DatabaseManager db;
+
     private MediaPlayer player = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
+
+        db = new DatabaseManager(this, 1);
 
         // On initialise notre Thread-Pool et notre ImageLoader
         mVolleyRequestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -56,7 +61,8 @@ public class MusicActivity extends Activity {
             @Override
             public void onClick(View v) {
                 tempM.setFavorite(true);
-                ManageFavorites.add(getApplicationContext(), tempM);
+                //ManageFavorites.add(getApplicationContext(), tempM);
+                db.add(tempM);
             }
         });
 
@@ -65,7 +71,8 @@ public class MusicActivity extends Activity {
             @Override
             public void onClick(View v) {
                 tempM.setFavorite(false);
-                ManageFavorites.remove(getApplicationContext(), tempM);
+                //ManageFavorites.remove(getApplicationContext(), tempM);
+                db.remove(tempM);
             }
         });
 
