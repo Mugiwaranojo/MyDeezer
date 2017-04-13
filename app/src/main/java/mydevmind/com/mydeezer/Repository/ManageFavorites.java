@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import mydevmind.com.mydeezer.model.IOnFavoriteChange;
+import mydevmind.com.mydeezer.fragments.IOnFavoriteChange;
 import mydevmind.com.mydeezer.model.Music;
 
 /**

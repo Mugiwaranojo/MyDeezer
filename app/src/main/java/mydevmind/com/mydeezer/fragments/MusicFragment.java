@@ -13,18 +13,11 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
-
 import java.io.IOException;
 
 import mydevmind.com.mydeezer.R;
-import mydevmind.com.mydeezer.Repository.DatabaseManager;
-import mydevmind.com.mydeezer.model.BitmapLruCache;
-import mydevmind.com.mydeezer.model.DownloadImagesTask;
-import mydevmind.com.mydeezer.model.IOnFavoriteChange;
+import mydevmind.com.mydeezer.Repository.FavoriteRepository;
+import mydevmind.com.mydeezer.fetcher.DownloadImagesTask;
 import mydevmind.com.mydeezer.model.Music;
 
 /**
@@ -45,7 +38,7 @@ public class MusicFragment extends Fragment {
 
     private Music tempM;
 
-    private DatabaseManager db;
+    private FavoriteRepository favoriteRepository;
 
     private MediaPlayer player = new MediaPlayer();
 
@@ -53,7 +46,7 @@ public class MusicFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.layout_music, null);
 
-        db = DatabaseManager.getInstance(getActivity());
+        favoriteRepository = FavoriteRepository.getInstance(getActivity());
 
         fieldTitleView= (TextView)  v.findViewById(R.id.textViewSongTitle);
         fieldAlbumView= (TextView)  v.findViewById(R.id.textViewValuedAlbum);
@@ -64,7 +57,7 @@ public class MusicFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 tempM.setFavorite(true);
-                db.add(tempM);
+                favoriteRepository.add(tempM);
                 onFavoriteChangeListener.onFavoriteChange(tempM, true);
 
             }
@@ -75,7 +68,7 @@ public class MusicFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 tempM.setFavorite(false);
-                db.remove(tempM);
+                favoriteRepository.remove(tempM);
                 onFavoriteChangeListener.onFavoriteChange(tempM, false);
             }
         });
@@ -103,9 +96,7 @@ public class MusicFragment extends Fragment {
 
     public void setSelectedMusic(Music m){
         tempM= m;
-        if(fieldTitleView!=null) {
-            refresh();
-        }
+        if(fieldTitleView!=null) refresh();
     }
 
     public void refresh(){
@@ -117,7 +108,7 @@ public class MusicFragment extends Fragment {
         }else{
             favNoView.setChecked(true);
         }
-        if(tempM.getCoverUrl()!="") {
+        if(!tempM.getCoverUrl().equals("")) {
             coverAlbumView.setImageResource(android.R.drawable.ic_menu_gallery);
             DownloadImagesTask imagesTask= new DownloadImagesTask(coverAlbumView);
             imagesTask.execute(tempM.getCoverUrl());

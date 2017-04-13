@@ -1,14 +1,10 @@
-package mydevmind.com.mydeezer.model;
+package mydevmind.com.mydeezer.fetcher;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,56 +17,31 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 import mydevmind.com.mydeezer.Repository.DatabaseManager;
-import mydevmind.com.mydeezer.Repository.ManageFavorites;
+import mydevmind.com.mydeezer.model.Music;
 
 /**
  * Created by Fitec on 25/06/2014.
  */
-public class DownloadJsonTask extends AsyncTask<String, Void, String> {
+public class DownloadJsonTask extends AsyncTask<String, Void, String>  {
 
-    private ListView listView;
-    private ArrayList<Music> musics;
-    private ProgressDialog spinner;
-    private DatabaseManager db;
 
-    public DownloadJsonTask(Context context, ListView listView, ArrayList<Music> musics, ProgressDialog spinner) {
-        this.listView = listView;
-        this.musics = musics;
-        this.spinner = spinner;
-        this.db = DatabaseManager.getInstance(context);
+    private IOnRequestResultListener onConnectionResultListener;
+
+    public DownloadJsonTask(IOnRequestResultListener onConnectionResultListener) {
+       this.onConnectionResultListener= onConnectionResultListener;
     }
 
     @Override
     protected void onPostExecute(String result)
     {
-        musics.clear();
         try {
             JSONObject jsonObj = new JSONObject(result);
-            // Getting JSON Array node
-            JSONArray tracks = jsonObj.getJSONArray("data");
-            for (int i = 0; i < tracks.length(); i++) {
-                JSONObject track = tracks.getJSONObject(i);
-                Music m = new Music();
-                m.setTitle(track.getString("title"));
-                m.setArtist(track.getJSONObject("artist").getString("name"));
-                m.setAlbum(track.getJSONObject("album").getString("title"));
-                m.setFavorite(true);
-                m.setSampleUrl(track.getString("preview"));
-                m.setLink(track.getString("link"));
-                m.setCoverUrl(track.getJSONObject("album").getString("cover"));
-                if(!db.isFavorite(m)){
-                    m.setFavorite(false);
-                }
-                musics.add(m);
-                ((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
-                spinner.dismiss();
-            }
-
+            onConnectionResultListener.onRequestResult(jsonObj, null);
         } catch (JSONException e) {
             e.printStackTrace();
+            onConnectionResultListener.onRequestResult(null, e);
         }
     }
-
 
     @Override
     protected String doInBackground(String... strings) {
@@ -113,4 +84,5 @@ public class DownloadJsonTask extends AsyncTask<String, Void, String> {
         }
         return sb.toString();
     }
+
 }

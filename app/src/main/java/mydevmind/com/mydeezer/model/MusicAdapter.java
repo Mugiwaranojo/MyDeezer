@@ -9,16 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import mydevmind.com.mydeezer.R;
+import mydevmind.com.mydeezer.fetcher.DownloadImagesTask;
 
 /**
  * Created by Joan on 23/06/2014.

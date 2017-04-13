@@ -5,16 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-
-import mydevmind.com.mydeezer.Repository.DatabaseManager;
 import mydevmind.com.mydeezer.fragments.MusicFragment;
 import mydevmind.com.mydeezer.fragments.MusicListFragment;
-import mydevmind.com.mydeezer.model.IOnMusicSelected;
+import mydevmind.com.mydeezer.fragments.IOnMusicSelected;
 import mydevmind.com.mydeezer.model.Music;
-import mydevmind.com.mydeezer.model.MusicAdapter;
 
 /**
  * Created by Mugiwara on 13/04/2017.
