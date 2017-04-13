@@ -1,0 +1,54 @@
+Applications Memory Usage (kB):
+Uptime: 283856251 Realtime: 701548469
+
+** MEMINFO in pid 6022 [mydevmind.com.mydeezer] **
+                   Pss  Private  Private  Swapped     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------
+  Native Heap     4808     4712        0    25472    34240    32181     2058
+  Dalvik Heap     1115     1032        0     1620    11012     8897     2115
+ Dalvik Other      401      324        0     5136                           
+        Stack      284      284        0        0                           
+       Ashmem       31        0        0        0                           
+    Other dev        4        0        4        0                           
+     .so mmap     2009      124      888     3832                           
+    .apk mmap      255        0       44        0                           
+    .ttf mmap        5        0        0        0                           
+    .dex mmap      645      564       80        4                           
+    .oat mmap     1750        0      648        0                           
+    .art mmap     1025      496       44      244                           
+   Other mmap       47        8       24        0                           
+   EGL mtrack     7174     7174        0        0                           
+    GL mtrack     7028     7028        0        0                           
+      Unknown      175      172        0      168                           
+        TOTAL    26756    21918     1732    36476    45252    41078     4173
+ 
+ App Summary
+                       Pss(KB)
+                        ------
+           Java Heap:     1572
+         Native Heap:     4712
+                Code:     2348
+               Stack:      284
+            Graphics:    14202
+       Private Other:      532
+              System:     3106
+ 
+               TOTAL:    26756      TOTAL SWAP (KB):    36476
+ 
+ Objects
+               Views:       24         ViewRootImpl:        1
+         AppContexts:        2           Activities:        1
+              Assets:        9        AssetManagers:        2
+       Local Binders:       11        Proxy Binders:       14
+       Parcel memory:        4         Parcel count:       16
+    Death Recipients:        0      OpenSSL Sockets:        0
+ 
+ SQL
+         MEMORY_USED:        0
+  PAGECACHE_OVERFLOW:        0          MALLOC_SIZE:        0
+ 
+ 
+ Asset Allocations
+    : 1K
+    : 1K
