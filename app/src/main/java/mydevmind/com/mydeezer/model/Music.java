@@ -26,7 +26,7 @@ public class Music implements Serializable{
         this.coverUrl = "";
     }
 
-    public Music(String title, String artist, String album, Integer duration, boolean isFavorite, String sampleUrl, String link, String coverUrl) {
+    public Music(String title, String artist, String album, boolean isFavorite, String sampleUrl, String link, String coverUrl) {
         this.title = title;
         this.artist = artist;
         this.album = album;
@@ -93,7 +93,7 @@ public class Music implements Serializable{
     }
 
     public static Music getDefaultMusic(){
-        return new Music("Her favorite song", "Mayer Hawthorne", "Her favorite song", 30, true,
+        return new Music("Her favorite song", "Mayer Hawthorne", "Her favorite song", true,
                          "https://api.spotify.com/v1/albums/1d1EbySoXWEVztSUsgjpOY",
                          "https://open.spotify.com/album/1d1EbySoXWEVztSUsgjpOY",
                          "https://i.scdn.co/image/de86ae567463a2d3577cafbcd76bd248e376c027");
@@ -103,7 +103,7 @@ public class Music implements Serializable{
         ArrayList<Music> allMusics= new ArrayList<Music>(n);
         for(int i=0; i<n; i++){
             int track= 1+i;
-            allMusics.add(i,new Music("track - "+track, "Unknown Artist", "Unknown Album", 30, false, "", "", "https://i.scdn.co/image/de86ae567463a2d3577cafbcd76bd248e376c027"));
+            allMusics.add(i,new Music("track - "+track, "Unknown Artist", "Unknown Album", false, "", "", "https://i.scdn.co/image/de86ae567463a2d3577cafbcd76bd248e376c027"));
         }
         return allMusics;
     }
