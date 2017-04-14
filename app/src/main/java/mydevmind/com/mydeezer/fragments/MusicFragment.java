@@ -127,8 +127,10 @@ public class MusicFragment extends Fragment {
                 player.setDataSource(getActivity(), Uri.parse(this.tempM.getSampleUrl()));
                 player.prepare();
                 player.start();
+                listenButtonView.setText(R.string.button_stop);
             }else{
                 player.stop();
+                listenButtonView.setText(R.string.button_ecouter);
             }
         } catch (IOException e) {
             e.printStackTrace();

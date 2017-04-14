@@ -30,5 +30,7 @@
     <string name="info_no_value"> - </string>
 
     <string name="action_favorites">Favoris</string>
+    <string name="button_stop">STOP</string>
+    <string name="button_ecouter">ECOUTER</string>
 
 </resources>
