@@ -22,6 +22,7 @@ import mydevmind.com.mydeezer.R;
 import mydevmind.com.mydeezer.Repository.FavoriteRepository;
 import mydevmind.com.mydeezer.fetcher.DeezerMusicFetcher;
 import mydevmind.com.mydeezer.fetcher.IOnMusicFetcherResultListener;
+import mydevmind.com.mydeezer.fetcher.ItunesMusicFetcher;
 import mydevmind.com.mydeezer.model.Music;
 import mydevmind.com.mydeezer.model.MusicAdapter;
 
@@ -100,7 +101,7 @@ public class MusicListFragment extends Fragment implements IOnFavoriteChange {
         spinner.setCancelable(false);
         spinner.show();
 
-        DeezerMusicFetcher  dmf= new DeezerMusicFetcher(getActivity());
+        ItunesMusicFetcher dmf= new ItunesMusicFetcher(getActivity());
         dmf.fetchMusics(textSearch, new IOnMusicFetcherResultListener() {
             @Override
             public void onMusicFetcherResult(ArrayList<Music> results, Exception e) {

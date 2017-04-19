@@ -30,4 +30,20 @@ public class MusicHelper {
         }
         return m;
     }
+
+    public static Music decodeItunesJson(Context context, JSONObject object) throws JSONException {
+        JSONObject track = object;
+        Music m = new Music();
+        m.setTitle(track.getString("trackName"));
+        m.setArtist(track.getString("artistName"));
+        m.setAlbum(track.getString("collectionName"));
+        m.setFavorite(true);
+        m.setSampleUrl(track.getString("previewUrl"));
+        m.setLink(track.getString("trackViewUrl"));
+        m.setCoverUrl(track.getString("artworkUrl100"));
+        if (!FavoriteRepository.getInstance(context).isFavorite(m)) {
+            m.setFavorite(false);
+        }
+        return m;
+    }
 }
